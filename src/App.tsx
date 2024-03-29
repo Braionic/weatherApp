@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import { useState } from "react";
+import "./App.css";
+import useFetch from "./components/hooks/useFetch";
+import Search from "./components/Search";
+interface tgbank {
+  error: string
+}
 function App() {
+  const [name, setName] = useState("new haven");
+  const [value, setValue] = useState("");
+  const { data, isLoading, error, fetchData } = useFetch(
+    `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=8566a60fd624223d180b1431fe1aa1cb`
+  );
+  
+  function handleSubmit() {
+    fetchData(
+      `https://api.openweathermap.org/data/2.5/weather?q=${value}&appid=8566a60fd624223d180b1431fe1aa1cb`
+    );
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+         <div style={{padding:"20px", color: "red"}}><h5>{error && error}</h5></div>
+      <div>
+        <Search
+          data={data}
+          Value={value}
+          handleSubmit={handleSubmit}
+          setValue={setValue}
+          error={error}
+        />
+      </div>
     </div>
   );
 }
